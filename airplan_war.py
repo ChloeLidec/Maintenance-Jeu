@@ -306,8 +306,8 @@ def main():
         title = 'Commands',
         width = const.SCREEN_WIDTH
     )
-    commands_menu.add.label('Move : ↑ ← ↓ →')
-    commands_menu.add.label('Shoot : Space')
+    commands_menu.add.label('Move :  ^  \n           <  v  >')
+    commands_menu.add.label('Triple shoot : Space')
     commands_menu.add.button('Return to main menu', pygame_menu.events.BACK)
 
     main_menu = pygame_menu.Menu(
