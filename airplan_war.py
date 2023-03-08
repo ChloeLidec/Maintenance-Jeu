@@ -10,13 +10,15 @@ import pygame
 import pygame.locals as lo
 import constantes as const
 import player as pl
-
+import math
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 pygame.display. set_caption('Airplane Wars')
-# Load the background map #regarder svg
-background = pygame.image.load('resources/image/background.png')
+# Background
+background = pygame.image.load('resources/image/background.png').convert()
+scroll = 0
+tiles = math.ceil(const.SCREEN_WIDTH / background.get_width()) + 1
 
 # Load the picture of the plane
 plane_img = pygame.image.load('resources/image/shoot.png')
@@ -169,8 +171,15 @@ while running:
     # Contrôlez la fréquence d'images maximale du jeu
     clock.tick(45)
     # Draw the background
-    screen.fill (0)
-    screen.blit (background, (0, 0))
+    i = 0
+    while i <tiles :
+        screen.blit(background, (0,background.get_width() * i + scroll))
+        i += 1
+    scroll -= 1
+    if abs(scroll) == background.get_width():
+        scroll = 0
+    # screen.fill (0)
+    # screen.blit (background, (0, 0))
     # Draw an airplane
     screen.blit(player.image[player.img_index], player.rect)
 
