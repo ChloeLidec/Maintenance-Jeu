@@ -15,7 +15,7 @@ import player as pl
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 pygame.display. set_caption('Airplane Wars')
-# Load the background map
+# Load the background map #regarder svg
 background = pygame.image.load('resources/image/background.png')
 
 # Load the picture of the plane
@@ -204,12 +204,12 @@ while running:
     if not player.is_hit:
         screen.blit(player.image[player.img_index], player.rect)
         # Changer l'index de l'image pour animer l'avion
-        player.img_index = cpt_apparition_bullet // const.DELAI_ANIM
+        player.img_index = cpt_apparition_bullet // const.INDEX_ANIM
     else:
-        player.img_index = player_down_index // const.DELAI_ANIM
+        player.img_index = player_down_index // const.INDEX_ANIM
         screen.blit(player.image[player.img_index], player.rect)
         player_down_index += 1
-        if player_down_index > 47:
+        if player_down_index > 25:#gere le temps de l'animation de l'avion
             running = False
 
     # Update the screen
