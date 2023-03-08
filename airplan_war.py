@@ -18,7 +18,7 @@ pygame.display. set_caption('Airplane Wars')
 # Background
 background = pygame.image.load('resources/image/background.png').convert()
 scroll = 0
-tiles = math.ceil(const.SCREEN_WIDTH / background.get_width()) + 1
+tiles = math.ceil(const.SCREEN_HEIGHT / background.get_height()) + 1
 
 # Load the picture of the plane
 plane_img = pygame.image.load('resources/image/shoot.png')
@@ -173,13 +173,11 @@ while running:
     # Draw the background
     i = 0
     while i <tiles :
-        screen.blit(background, (0,background.get_width() * i + scroll))
+        screen.blit(background, (0,background.get_height() * i + scroll))
         i += 1
-    scroll -= 1
-    if abs(scroll) == background.get_width():
+    scroll -= 6
+    if abs(scroll) == background.get_height():
         scroll = 0
-    # screen.fill (0)
-    # screen.blit (background, (0, 0))
     # Draw an airplane
     screen.blit(player.image[player.img_index], player.rect)
 
