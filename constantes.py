@@ -10,3 +10,5 @@ ENEMY_FREQUENCY = 20
 INDEX_ANIM = 8
 VOLUME = 0.3
 DIFFICULTIES = [1, 2, 3]
+
+GAME_OVER = 'resources/image/gameover.png'

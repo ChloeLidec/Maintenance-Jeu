@@ -269,19 +269,34 @@ def fonction_jeu():
                 pygame.quit()
                 exit()
 
-    font = pygame.font.Font(None, 48)
-    text = font.render('Score: '+ str(score), True, (255, 0, 0))
-    text_rect = text.get_rect()
-    text_rect.centerx = screen.get_rect().centerx
-    text_rect.centery = screen.get_rect().centery + 24
-    screen.blit(game_over, (0, 0))
-    screen.blit(text, text_rect)
-    while 1:
-        for event in pygame.event.get():
+    game_over_menu()
+
+
+def game_over_menu():
+    surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+    
+    theme = pygame_menu.themes.THEME_DARK.copy()
+    theme.set_background_color_opacity(0.5)
+    theme.background_color = (pygame_menu.BaseImage(image_path=const.GAME_OVER))
+    menu = pygame_menu.Menu(
+        height = const.SCREEN_HEIGHT,
+        title = 'Game Over',
+        theme = theme,
+        width = const.SCREEN_WIDTH)
+    menu.add.label('Score: '+ str(score))
+    menu.add.button('Play again', fonction_jeu)
+    menu.add.button('Return to main menu', main)
+    menu.add.button('Quit', pygame_menu.events.EXIT)
+
+    while True:
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        pygame.display.update()
+        menu.update(events)
+        menu.draw(surface)
+        pygame.display.flip()
 
 def main():
     global main_menu
