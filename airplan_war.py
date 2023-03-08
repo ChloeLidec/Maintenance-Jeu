@@ -175,7 +175,7 @@ while running:
     while i <tiles :
         screen.blit(background, (0,background.get_height() * i + scroll))
         i += 1
-    scroll -= 6
+    scroll -= 1
     if abs(scroll) == background.get_height():
         scroll = 0
     # Draw an airplane
