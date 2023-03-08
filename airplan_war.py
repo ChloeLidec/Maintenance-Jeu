@@ -168,16 +168,31 @@ def epaves(ennemies_down):
         enemy_down.down_index += 1
     return score_act
 
-def change_difficulty(values):
+def change_difficulty(tuple,index):
     """Change la difficulté du jeu
 
     Arguments:
         values {tuple} -- Valeur de la difficulté"""
-    nom,index = values
-    difficulte = const.DIFFICULTY[index]
+    global difficulte
+    difficulte = const.DIFFICULTIES[index]
+    print(difficulte)
 
 def fonction_jeu():
     global main_menu
+    global scroll
+    global player
+    global cpt_apparition_bullet
+    global cpt_apparition_enemy
+    global player_down_index
+    global game_over
+    global game_over_sound
+    global bullet_sound
+    global enemy1_down_sound
+    global enemies1
+    global enemies_down
+    global score
+    global difficulte
+    print(difficulte)
     clock = pygame.time.Clock()
     running = True
     score=0
@@ -197,7 +212,7 @@ def fonction_jeu():
             scroll = 0
         # Draw an airplane
         screen.blit(player.image[player.img_index], player.rect)
-
+ 
         # Gérer les événements
         cpt_apparition_bullet = tirs(cpt_apparition_bullet,player)
         deplacer_puces(player.bullets,player)
@@ -271,20 +286,23 @@ def fonction_jeu():
 def main():
     global main_menu
     global surface
+    global difficulte
 
     surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+    theme = pygame_menu.themes.THEME_DARK.copy()
+    
     play_menu = pygame_menu.Menu(
         height = const.SCREEN_HEIGHT,
         title = 'Launch a game',
+        theme = theme,
         width = const.SCREEN_WIDTH)
-    play_menu.add.button('Play', fonction_jeu, difficulte)
+    play_menu.add.button('Play', fonction_jeu)
     play_menu.add.selector('Difficulty :', [('Easy', 0), ('Medium', 1),('Hard',2)], onchange=change_difficulty, selector_id='diff')
     play_menu.add.button('Return to main menu', pygame_menu.events.BACK)
 
-    commands_theme = pygame_menu.themes.THEME_DARK.copy()
     commands_menu = pygame_menu.Menu(
         height = const.SCREEN_HEIGHT,
-        theme = commands_theme,
+        theme = theme,
         title = 'Commands',
         width = const.SCREEN_WIDTH
     )
@@ -295,6 +313,7 @@ def main():
     main_menu = pygame_menu.Menu(
         height = const.SCREEN_HEIGHT,
         title = 'Airplane War',
+        theme = theme,
         width = const.SCREEN_WIDTH
     )
     main_menu.add.button('Play', play_menu)
