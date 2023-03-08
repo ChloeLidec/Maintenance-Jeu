@@ -275,7 +275,7 @@ def fonction_jeu():
 def game_over_menu():
     surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     
-    theme = pygame_menu.themes.THEME_DARK.copy()
+    theme = pygame_menu.themes.THEME_ORANGE.copy()
     theme.set_background_color_opacity(0.5)
     theme.background_color = (pygame_menu.BaseImage(image_path=const.GAME_OVER))
     menu = pygame_menu.Menu(
@@ -287,7 +287,7 @@ def game_over_menu():
     menu.add.button('Play again', fonction_jeu)
     menu.add.button('Return to main menu', main)
     menu.add.button('Quit', pygame_menu.events.EXIT)
-
+    menu.add.vertical_margin(500)
     while True:
         events = pygame.event.get()
         for event in events:
