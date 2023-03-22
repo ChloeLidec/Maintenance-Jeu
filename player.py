@@ -53,3 +53,7 @@ class Player (pygame.sprite.Sprite):
             self.rect.left = const.SCREEN_WIDTH - self.rect.width
         else:
             self.rect.left += self.speed
+    def reset (self):
+        self.is_hit = False
+        self.img_index = 0
+        

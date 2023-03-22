@@ -175,7 +175,6 @@ def change_difficulty(tuple,index):
         values {tuple} -- Valeur de la difficulté"""
     global difficulte
     difficulte = const.DIFFICULTIES[index]
-    print(difficulte)
 
 def fonction_jeu():
     global main_menu
@@ -192,10 +191,10 @@ def fonction_jeu():
     global enemies_down
     global score
     global difficulte
-    print(difficulte)
     clock = pygame.time.Clock()
     running = True
     score=0
+    player.reset()
 
     main_menu.disable()
     main_menu.full_reset()
