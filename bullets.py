@@ -12,3 +12,5 @@ class Bullet (pygame.sprite.Sprite):
 
     def move (self):
         self.rect.top -= self.speed
+    def move_boss(self):
+        self.rect.top += self.speed

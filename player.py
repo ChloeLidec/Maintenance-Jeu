@@ -14,8 +14,9 @@ class Player (pygame.sprite.Sprite):
         self.image = [] # List of pictures of player object wizard
         self.img_index = 0 # Player Wizard Image Index
         self.is_hit = False # Is the player hit?
-        self.bullets = pygame.sprite.Group() # Collection of bullets fired by the player's aircraft
 
+        #for the boss battle
+        self.hp = 10
 
         for i in range(len(player_rect)):
             self.image.append(plane_img.subsurface(player_rect[i]).convert_alpha())
@@ -66,3 +67,5 @@ class Player (pygame.sprite.Sprite):
         self.img_index = 0
         self.triple_shoot_frequency = 0
         self.rect.topleft = [200, 600]
+        self.bullets = pygame.sprite.Group()
+        self.hp = 10
