@@ -1,8 +1,9 @@
 """Classe enemy"""
 
 import pygame
+import math
+import constantes as const
 
-# Enemy class
 class Enemy(pygame.sprite.Sprite):
     """_summary_ : Enemy plane deplacement
 
@@ -24,7 +25,11 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 5
         self.down_index = 0
 
-    def move (self):
+    def move (self,difficulty):
         """_summary_ : Enemy plane movement
         """
-        self.rect.top += self.speed
+        self.rect.top += self.speed +(0.8 * difficulty)
+        if difficulty == 3:
+            self.rect.left += math.sin(self.rect.top/100)*5
+            if self.rect.left > const.SCREEN_WIDTH:
+                self.rect.left = 0

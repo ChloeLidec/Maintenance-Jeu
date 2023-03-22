@@ -22,7 +22,7 @@ background = pygame.image.load('resources/image/background.png').convert()
 scroll = 0
 tiles = math.ceil(const.SCREEN_HEIGHT / background.get_height()) + 1
 
-difficulte = 0
+difficulty = 0
 
 # Load the picture of the plane
 plane_img = pygame.image.load('resources/image/shoot.png')
@@ -119,13 +119,13 @@ def faire_apparaitre_ennemies(enemies,cpt):
         cpt_ennemis = 0
     return cpt_ennemis
 
-def deplacer_ennemies(ennemies):
+def deplacer_ennemies(ennemies,difficulty):
     """Déplace les ennemies vers le bas et les enleves si ils sortent de l'écran
 
         Arguments:
             ennemies {list} -- Liste des ennemies"""
     for enemy in ennemies:
-        enemy.move()
+        enemy.move(difficulty)
         # Déterminez si le joueur a été touché
         if pygame.sprite.collide_circle_ratio(0.5)(enemy, player):
             enemies_down.add(enemy)
@@ -173,8 +173,8 @@ def change_difficulty(tuple,index):
 
     Arguments:
         values {tuple} -- Valeur de la difficulté"""
-    global difficulte
-    difficulte = const.DIFFICULTIES[index]
+    global difficulty
+    difficulty = const.DIFFICULTIES[index]
 
 def fonction_jeu():
     global main_menu
@@ -190,7 +190,7 @@ def fonction_jeu():
     global enemies1
     global enemies_down
     global score
-    global difficulte
+    global difficulty
     clock = pygame.time.Clock()
     running = True
     score=0
@@ -218,7 +218,7 @@ def fonction_jeu():
         player.bullets.draw(screen)
 
         cpt_apparition_enemy=faire_apparaitre_ennemies(enemies1, cpt_apparition_enemy)
-        deplacer_ennemies(enemies1)
+        deplacer_ennemies(enemies1,difficulty)
         ennemies_touche(enemies1,player)
 
         # Dessinez l'animation de l'épave
@@ -300,7 +300,7 @@ def game_over_menu():
 def main():
     global main_menu
     global surface
-    global difficulte
+    global difficulty
 
     surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     theme = pygame_menu.themes.THEME_DARK.copy()
