@@ -307,10 +307,121 @@ def game_function():
                 pygame.quit()
                 exit()
 
-    game_over_menu()
+    game_over_menu("infinite")
 
+def game_fight_mode():
+    global main_menu
+    global scroll
+    global player
+    global cpt_apparition_bullet
+    global cpt_apparition_enemy
+    global player_down_index
+    global game_over
+    global game_over_sound
+    global bullet_sound
+    global enemy1_down_sound
+    global enemies1
+    global enemies_down
+    global score
+    global difficulty
+    global progress_bar_value
+    global progress_bar_height
 
-def game_over_menu():
+    clock = pygame.time.Clock()
+    running = True
+    score=0
+    player.reset()
+
+    main_menu.disable()
+    main_menu.full_reset()
+    while running:
+        # control the game speed
+        clock.tick(45)
+        # Draw the background
+        i = 0
+        while i <tiles :
+            screen.blit(background, (0,background.get_height() * i + scroll))
+            i += 1
+        scroll -= 1
+        if abs(scroll) == background.get_height():
+            scroll = 0
+
+        # Draw the progress bar at the top of the screen
+        pygame.draw.rect(screen, (0, 0, 0), (0,const.SCREEN_HEIGHT-progress_bar_height, 100, progress_bar_height))
+        pygame.draw.rect(screen, (255, 200, 64), (0,const.SCREEN_HEIGHT-progress_bar_height, progress_bar_value, progress_bar_height))
+        #draw a text on the right of the progress bar
+        charge_font = pygame.font.Font(None, 32)
+        charge_text = charge_font.render("Triple shoot charger", True, (255, 200, 64))
+        text_rect = charge_text.get_rect()
+        text_rect.topleft = [0, const.SCREEN_HEIGHT-progress_bar_height - 20]
+        screen.blit(charge_text, text_rect)
+        # Draw an airplane
+        screen.blit(player.image[player.img_index], player.rect)
+ 
+        # handle game's events
+        cpt_apparition_bullet = shoot(cpt_apparition_bullet,player)
+        move_bullets(player.bullets,player)
+        player.bullets.draw(screen)
+
+        cpt_apparition_enemy=spawn_ennemies(enemies1, cpt_apparition_enemy)
+        move_ennemies(enemies1,difficulty)
+        ennemies_down_test(enemies1,player)
+
+        # get score
+        score+=down_anim(enemies_down)
+        enemies1.draw(screen)
+        # draw the score
+        score_font = pygame.font.Font(None, 36)
+        score_text = score_font.render(str(score), True, (128, 128, 128))
+        text_rect = score_text.get_rect()
+        text_rect.topleft = [10, 10]
+        screen.blit(score_text, text_rect)
+
+        # show score
+        score_font = pygame.font.Font(None, 36)
+        score_text = score_font.render(str(score), True, (128, 128, 128))
+        text_rect = score_text.get_rect()
+        text_rect.topleft = [10, 10]
+        screen.blit(score_text, text_rect)
+
+        # draw the player
+        if not player.is_hit:
+            screen.blit(player.image[player.img_index], player.rect)
+            player.img_index = cpt_apparition_bullet // const.INDEX_ANIM
+        else:
+            player.img_index = player_down_index // const.INDEX_ANIM
+            screen.blit(player.image[player.img_index], player.rect)
+            player_down_index += 1
+            if player_down_index > 25:# time of the animation
+                running = False
+
+        # add 0.5 to the player's triple shoot charger
+        if player.triple_shoot_frequency <500:
+            player.triple_shoot_frequency += 1
+            #the pg value is the percentage of the triple shoot charger
+            progress_bar_value = player.triple_shoot_frequency / 5
+        # Update the screen
+        pygame.display.update()
+        key_pressed = pygame.key.get_pressed()
+        if key_pressed[lo.K_w] or key_pressed[lo.K_UP]:
+            player.move_up()
+        if key_pressed[lo.K_s] or key_pressed[lo.K_DOWN]:
+            player.move_down()
+        if key_pressed[lo.K_a] or key_pressed[lo.K_LEFT]:
+            player.move_left()
+        if key_pressed[lo.K_d] or key_pressed[lo.K_RIGHT]:
+            player.move_right()
+        if key_pressed[lo.K_SPACE]:
+            triple_shoot(player)
+        # Process game exits
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
+    game_over_menu("fight")
+
+def game_over_menu(mode):
     surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     
     theme = pygame_menu.themes.THEME_ORANGE.copy()
@@ -322,7 +433,10 @@ def game_over_menu():
         theme = theme,
         width = const.SCREEN_WIDTH)
     menu.add.label('Score: '+ str(score))
-    menu.add.button('Play again', game_function)
+    if mode == "fight":
+        menu.add.button('Play again',game_fight_mode)
+    else:
+        menu.add.button('Play again',game_function)
     menu.add.button('Return to main menu', main)
     menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.add.vertical_margin(500)
@@ -369,7 +483,8 @@ def main():
         theme = theme,
         width = const.SCREEN_WIDTH
     )
-    main_menu.add.button('Play', play_menu)
+    main_menu.add.button('Play infinite mode', play_menu)
+    main_menu.add.button('Play fight mode', game_fight_mode)
     main_menu.add.button('Commands', commands_menu)
     main_menu.add.button('Quit', pygame_menu.events.EXIT)
 

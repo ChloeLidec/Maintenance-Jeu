@@ -65,3 +65,4 @@ class Player (pygame.sprite.Sprite):
         self.is_hit = False
         self.img_index = 0
         self.triple_shoot_frequency = 0
+        self.rect.topleft = [200, 600]
