@@ -27,7 +27,7 @@ difficulty = 0
 # Load the picture of the plane
 plane_img = pygame.image.load('resources/image/shoot.png')
 
-# Définir les paramètres liés à la surface utilisés par l'objet avion ennemi
+# Parameters of the ennemies
 enemy1_rect = pygame.Rect(534, 612, 57, 43)
 enemy1_img = plane_img.subsurface(enemy1_rect)
 enemies1 = pygame.sprite.Group()
@@ -39,21 +39,19 @@ enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(873, 697, 57, 43)))
 enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(267, 296, 57, 43)))
 enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(930, 697, 57, 43)))
 cpt_apparition_enemy = 0
-# Stockez des avions détruits pour le rendu d'animations de sprites d'épaves
 enemies_down = pygame.sprite.Group()
 
 
 bullet_sound = pygame.mixer.Sound('resources/sound/bullet.wav')
 bullet_sound.set_volume(const.VOLUME)
-#Définir les paramètres liés à la surface utilisés par l'objet puce(bullets)
 bullet_rect = pygame.Rect(1004, 987, 9, 21)
 bullet_img = plane_img.subsurface(bullet_rect)
 
-# Définir les paramètres liés au joueur
+# Parameters of the player
 player_rect = []
-player_rect.append(pygame.Rect(0, 99, 102, 126)) # Zone d'image du sprite du joueur
+player_rect.append(pygame.Rect(0, 99, 102, 126)) # Player's image zone
 player_rect.append(pygame.Rect(165, 360, 102, 126))
-player_rect.append(pygame.Rect(165, 234, 102, 126)) # Zone d'image du sprite d'explosion du joueur
+player_rect.append(pygame.Rect(165, 234, 102, 126)) # Player's explosion  image zone
 player_rect.append(pygame.Rect(330, 624, 102, 126))
 player_rect.append(pygame.Rect(330, 498, 102, 126))
 player_rect.append(pygame.Rect(432, 624, 102, 126))
@@ -67,45 +65,46 @@ game_over_sound = pygame.mixer.Sound('resources/sound/game_over.wav')
 game_over_sound.set_volume(const.VOLUME)
 
 
-def tirs(compteur,joueur):
-    """Fait tirer le joueur
+def shoot(cpt,player):
+    """ Make the player shoot
 
-    Arguments:
-        compteur {int} -- Compteur des tirs
-        player {Player} -- Objet joueur
-
-
+    Args:
+        cpt (int): cpt of the shoot
+        player (Player): player object
+    
     Returns:
-        int -- Compteur des tirs après le tir
-    """
-    cpt_tirs=compteur
-    if cpt_tirs % const.SHOOT_FREQUENCY == 0:
-        bullet_sound.play()
-        joueur.shoot(bullet_img)
-    cpt_tirs += 1
-    if cpt_tirs >= const.SHOOT_FREQUENCY:
-        cpt_tirs = 0
-    return cpt_tirs
-def deplacer_puces(bullets,joueur):
-    """Déplace les puce vers le haut
+        int: cpt of the shoot after the shoot
 
-    Arguments:
-        bullets {list} -- Liste des puce
-        player {Player} -- Objet joueur"""
+    """
+    cpt_shoot=cpt
+    if cpt_shoot % const.SHOOT_FREQUENCY == 0:
+        bullet_sound.play()
+        player.shoot(bullet_img)
+    cpt_shoot += 1
+    if cpt_shoot >= const.SHOOT_FREQUENCY:
+        cpt_shoot = 0
+    return cpt_shoot
+def move_bullets(bullets,player):
+    """Move the bullets
+
+    Args:
+        bullets (list): list of bullets
+        player (Player): player object
+    """
     for bullet in bullets:
         bullet.move()
         if bullet.rect.bottom < 0:
-            joueur.bullets.remove(bullet)
+            player.bullets.remove(bullet)
 
-def faire_apparaitre_ennemies(enemies,cpt):
-    """Fait apparaitre des ennemies
+def spawn_ennemies(enemies,cpt):
+    """Spawn ennemies
 
-        Arguments:
-            enemies {list} -- Liste des ennemies
-            cpt {int} --compteur des ennemies
+    Args:
+        enemies (list): list of ennemies
+        cpt (int): cpt of the ennemies
 
-        Returns:
-            int -- Compteur des ennemies aprèes l'apparition
+    Returns:
+        int: cpt of the ennemies after the spawn
         """
     cpt_ennemis=cpt
     if cpt_ennemis % const.ENEMY_FREQUENCY == 0:
@@ -119,14 +118,16 @@ def faire_apparaitre_ennemies(enemies,cpt):
         cpt_ennemis = 0
     return cpt_ennemis
 
-def deplacer_ennemies(ennemies,difficulty):
-    """Déplace les ennemies vers le bas et les enleves si ils sortent de l'écran
+def move_ennemies(ennemies,difficulty):
+    """Move the ennemies
 
-        Arguments:
-            ennemies {list} -- Liste des ennemies"""
+    Args:
+        ennemies (list): list of ennemies
+        difficulty (int): difficulty of the game
+    """
     for enemy in ennemies:
         enemy.move(difficulty)
-        # Déterminez si le joueur a été touché
+        # Déterminez si le player a été touché
         if pygame.sprite.collide_circle_ratio(0.5)(enemy, player):
             enemies_down.add(enemy)
             enemies1.remove(enemy)
@@ -135,25 +136,26 @@ def deplacer_ennemies(ennemies,difficulty):
             break
         if enemy.rect.top > const.SCREEN_HEIGHT:
             ennemies.remove(enemy)
-def ennemies_touche(ennemies,joueur):
-    """Vérifie si les ennemies sont touchés par les puce et les enlève si c'est le cas
+def ennemies_down_test(ennemies,player):
+    """Test if the ennemies are down
 
-    Arguments:
-        ennemies {list} -- Liste des ennemies
-        player {Player} -- Objet joueur
+    Args:
+        ennemies (list): list of ennemies
+        player (Player): player object
     """
-    enemiesa_down = pygame.sprite.groupcollide(ennemies, joueur.bullets, 1, 1)
-    for enemy_down in enemiesa_down:
+    list_ennemies_down = pygame.sprite.groupcollide(ennemies, player.bullets, 1, 1)
+    for enemy_down in list_ennemies_down:
         enemies_down.add(enemy_down)
 
-def epaves(ennemies_down):
-    """Gère les animations des épaves
+def down_anim(ennemies_down):
+    """Animation of the ennemies down
 
-    Arguments:
-        ennemies_down {list} -- Liste des épaves
+    Args:
+        ennemies_down (list): list of ennemies down
 
-        Returns:
-            score {int} -- Score du joueur recupéré des épaves"""
+    Returns:
+        int: score of the player
+    """
     score_act=0
     for enemy_down in ennemies_down:
         if enemy_down.down_index == 0:
@@ -169,14 +171,16 @@ def epaves(ennemies_down):
     return score_act
 
 def change_difficulty(tuple,index):
-    """Change la difficulté du jeu
+    """Change the difficulty of the game
 
-    Arguments:
-        values {tuple} -- Valeur de la difficulté"""
+    Args:
+        tuple (tuple): tuple of the difficulties
+        index (int): index of the difficulty
+    """
     global difficulty
     difficulty = const.DIFFICULTIES[index]
 
-def fonction_jeu():
+def game_function():
     global main_menu
     global scroll
     global player
@@ -199,7 +203,7 @@ def fonction_jeu():
     main_menu.disable()
     main_menu.full_reset()
     while running:
-        # Contrôlez la fréquence d'images maximale du jeu
+        # control the game speed
         clock.tick(45)
         # Draw the background
         i = 0
@@ -212,17 +216,17 @@ def fonction_jeu():
         # Draw an airplane
         screen.blit(player.image[player.img_index], player.rect)
  
-        # Gérer les événements
-        cpt_apparition_bullet = tirs(cpt_apparition_bullet,player)
-        deplacer_puces(player.bullets,player)
+        # handle game's events
+        cpt_apparition_bullet = shoot(cpt_apparition_bullet,player)
+        move_bullets(player.bullets,player)
         player.bullets.draw(screen)
 
-        cpt_apparition_enemy=faire_apparaitre_ennemies(enemies1, cpt_apparition_enemy)
-        deplacer_ennemies(enemies1,difficulty)
-        ennemies_touche(enemies1,player)
+        cpt_apparition_enemy=spawn_ennemies(enemies1, cpt_apparition_enemy)
+        move_ennemies(enemies1,difficulty)
+        ennemies_down_test(enemies1,player)
 
-        # Dessinez l'animation de l'épave
-        score+=epaves(enemies_down)
+        # get score
+        score+=down_anim(enemies_down)
         enemies1.draw(screen)
         # dessiner le score
         score_font = pygame.font.Font(None, 36)
@@ -231,23 +235,22 @@ def fonction_jeu():
         text_rect.topleft = [10, 10]
         screen.blit(score_text, text_rect)
 
-        # dessiner le score
+        # show score
         score_font = pygame.font.Font(None, 36)
         score_text = score_font.render(str(score), True, (128, 128, 128))
         text_rect = score_text.get_rect()
         text_rect.topleft = [10, 10]
         screen.blit(score_text, text_rect)
 
-        # dessiner l'avion du joueur
+        # draw the player
         if not player.is_hit:
             screen.blit(player.image[player.img_index], player.rect)
-            # Changer l'index de l'image pour animer l'avion
             player.img_index = cpt_apparition_bullet // const.INDEX_ANIM
         else:
             player.img_index = player_down_index // const.INDEX_ANIM
             screen.blit(player.image[player.img_index], player.rect)
             player_down_index += 1
-            if player_down_index > 25:#gere le temps de l'animation de l'avion
+            if player_down_index > 25:# time of the animation
                 running = False
 
         # Update the screen
@@ -283,7 +286,7 @@ def game_over_menu():
         theme = theme,
         width = const.SCREEN_WIDTH)
     menu.add.label('Score: '+ str(score))
-    menu.add.button('Play again', fonction_jeu)
+    menu.add.button('Play again', game_function)
     menu.add.button('Return to main menu', main)
     menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.add.vertical_margin(500)
@@ -310,7 +313,7 @@ def main():
         title = 'Launch a game',
         theme = theme,
         width = const.SCREEN_WIDTH)
-    play_menu.add.button('Play', fonction_jeu)
+    play_menu.add.button('Play', game_function)
     play_menu.add.selector('Difficulty :', [('Easy', 0), ('Medium', 1),('Hard',2)], onchange=change_difficulty, selector_id='diff')
     play_menu.add.button('Return to main menu', pygame_menu.events.BACK)
 

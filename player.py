@@ -5,9 +5,9 @@ import constantes as const
 import bullets as bul
 
 class Player (pygame.sprite.Sprite):
-    """Classe du joueur
+    """Class of player
     Args:
-        pygame.sprite.Sprite (Sprite): icone du joueur
+        pygame.sprite.Sprite (Sprite): player's sprite
     """
     def __init__(self, plane_img, player_rect, init_pos):
         pygame.sprite.Sprite.__init__(self)
@@ -34,13 +34,13 @@ class Player (pygame.sprite.Sprite):
         if self.rect.top <= 0:
             self.rect.top = 0
         else:
-            self.rect.top -= self.speed
+            self.rect.top -= self.speed + (const.PLAYER_SPEED *0.5)
 
     def move_down(self):
         if self.rect.top >= const.SCREEN_HEIGHT - self.rect.height:
             self.rect.top = const.SCREEN_HEIGHT - self.rect.height
         else:
-            self.rect.top += self.speed
+            self.rect.top += self.speed + (const.PLAYER_SPEED *0.5)
 
     def move_left (self):
         if self.rect.left <= 0:
@@ -52,8 +52,7 @@ class Player (pygame.sprite.Sprite):
         if self.rect.left >= const.SCREEN_WIDTH - self.rect.width:
             self.rect.left = const.SCREEN_WIDTH - self.rect.width
         else:
-            self.rect.left += self.speed
+            self.rect.left += self.speed + (const.PLAYER_SPEED *0.5)
     def reset (self):
         self.is_hit = False
         self.img_index = 0
-        

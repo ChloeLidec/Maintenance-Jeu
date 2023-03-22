@@ -30,6 +30,6 @@ class Enemy(pygame.sprite.Sprite):
         """
         self.rect.top += self.speed +(0.8 * difficulty)
         if difficulty == 3:
-            self.rect.left += math.sin(self.rect.top/100)*5
+            self.rect.left += math.sin(self.rect.top/100)*difficulty
             if self.rect.left > const.SCREEN_WIDTH:
                 self.rect.left = 0
