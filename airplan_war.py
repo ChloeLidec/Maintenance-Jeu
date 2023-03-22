@@ -65,6 +65,12 @@ game_over_sound = pygame.mixer.Sound('resources/sound/game_over.wav')
 game_over_sound.set_volume(const.VOLUME)
 
 
+progress_bar_height = 10
+progress_bar_max_value = 100
+# Value of the progress bar
+progress_bar_value = 0
+
+
 def shoot(cpt,player):
     """ Make the player shoot
 
@@ -206,6 +212,9 @@ def game_function():
     global enemies_down
     global score
     global difficulty
+    global progress_bar_value
+    global progress_bar_height
+
     clock = pygame.time.Clock()
     running = True
     score=0
@@ -224,6 +233,16 @@ def game_function():
         scroll -= 1
         if abs(scroll) == background.get_height():
             scroll = 0
+
+        # Draw the progress bar at the top of the screen
+        pygame.draw.rect(screen, (0, 0, 0), (0,const.SCREEN_HEIGHT-progress_bar_height, 100, progress_bar_height))
+        pygame.draw.rect(screen, (255, 200, 64), (0,const.SCREEN_HEIGHT-progress_bar_height, progress_bar_value, progress_bar_height))
+        #draw a text on the right of the progress bar
+        charge_font = pygame.font.Font(None, 32)
+        charge_text = charge_font.render("Triple shoot charger", True, (255, 200, 64))
+        text_rect = charge_text.get_rect()
+        text_rect.topleft = [0, const.SCREEN_HEIGHT-progress_bar_height - 20]
+        screen.blit(charge_text, text_rect)
         # Draw an airplane
         screen.blit(player.image[player.img_index], player.rect)
  
@@ -267,6 +286,8 @@ def game_function():
         # add 0.5 to the player's triple shoot charger
         if player.triple_shoot_frequency <500:
             player.triple_shoot_frequency += 1
+            #the pg value is the percentage of the triple shoot charger
+            progress_bar_value = player.triple_shoot_frequency / 5
         # Update the screen
         pygame.display.update()
         key_pressed = pygame.key.get_pressed()

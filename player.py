@@ -32,9 +32,9 @@ class Player (pygame.sprite.Sprite):
         self.bullets.add (bullet)
 
     def triple_shoot (self, bullet_img):
-        bullet1 = bul.Bullet (bullet_img, (self.rect.left + 60, self.rect.top))
+        bullet1 = bul.Bullet (bullet_img, (self.rect.left + 120, self.rect.top))
         bullet2 = bul.Bullet (bullet_img, self.rect.midtop)
-        bullet3 = bul.Bullet (bullet_img, (self.rect.right - 60, self.rect.top))
+        bullet3 = bul.Bullet (bullet_img, (self.rect.right - 120, self.rect.top))
         self.bullets.add (bullet1, bullet2, bullet3)
         self.triple_shoot_frequency = 0
 
@@ -64,3 +64,4 @@ class Player (pygame.sprite.Sprite):
     def reset (self):
         self.is_hit = False
         self.img_index = 0
+        self.triple_shoot_frequency = 0
