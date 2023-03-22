@@ -24,11 +24,19 @@ class Player (pygame.sprite.Sprite):
         self.rect.topleft = init_pos # Initialize the upper left corner coordinates of the rectangle
         self.speed = 8 # Initialize the player speed, here is a definite value.
         self.bullets = pygame.sprite.Group() # Collection of bullets fired by the player's aircraft
+        self.triple_shoot_frequency = 0
         self.img_index = 0 # Player Wizard Image Index
 
     def shoot (self, bullet_img):
         bullet = bul.Bullet (bullet_img, self.rect.midtop)
         self.bullets.add (bullet)
+
+    def triple_shoot (self, bullet_img):
+        bullet1 = bul.Bullet (bullet_img, (self.rect.left + 60, self.rect.top))
+        bullet2 = bul.Bullet (bullet_img, self.rect.midtop)
+        bullet3 = bul.Bullet (bullet_img, (self.rect.right - 60, self.rect.top))
+        self.bullets.add (bullet1, bullet2, bullet3)
+        self.triple_shoot_frequency = 0
 
     def move_up (self):
         if self.rect.top <= 0:

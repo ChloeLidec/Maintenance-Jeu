@@ -84,6 +84,17 @@ def shoot(cpt,player):
     if cpt_shoot >= const.SHOOT_FREQUENCY:
         cpt_shoot = 0
     return cpt_shoot
+
+def triple_shoot(player):
+    """Make the player shoot 3 bullets
+
+    Args:
+        player (Player): player object
+    """
+    bullet_sound.play()
+    if player.triple_shoot_frequency >=500:
+        player.triple_shoot(bullet_img)
+
 def move_bullets(bullets,player):
     """Move the bullets
 
@@ -228,7 +239,7 @@ def game_function():
         # get score
         score+=down_anim(enemies_down)
         enemies1.draw(screen)
-        # dessiner le score
+        # draw the score
         score_font = pygame.font.Font(None, 36)
         score_text = score_font.render(str(score), True, (128, 128, 128))
         text_rect = score_text.get_rect()
@@ -253,6 +264,9 @@ def game_function():
             if player_down_index > 25:# time of the animation
                 running = False
 
+        # add 0.5 to the player's triple shoot charger
+        if player.triple_shoot_frequency <500:
+            player.triple_shoot_frequency += 1
         # Update the screen
         pygame.display.update()
         key_pressed = pygame.key.get_pressed()
@@ -264,7 +278,8 @@ def game_function():
             player.move_left()
         if key_pressed[lo.K_d] or key_pressed[lo.K_RIGHT]:
             player.move_right()
-
+        if key_pressed[lo.K_SPACE]:
+            triple_shoot(player)
         # Process game exits
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
