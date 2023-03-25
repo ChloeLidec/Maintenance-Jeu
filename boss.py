@@ -26,7 +26,7 @@ class Boss(pygame.sprite.Sprite):
     
     def spawn_ennemies(self,enemies,enemy1_img, enemy1_down_imgs, enemy1_rect):
         """ make 3 enemies spawn """
-        for i in range(3):
+        for i in range(2):
             enemy1_pos = [random.randint(0, const.SCREEN_WIDTH - enemy1_rect.width), 0]
             enemy1 = enem.Enemy(enemy1_img,
                         enemy1_down_imgs,
