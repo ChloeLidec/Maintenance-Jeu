@@ -308,15 +308,9 @@ def game_function():
         score_font = pygame.font.Font(None, 36)
         score_text = score_font.render(str(score), True, (128, 128, 128))
         text_rect = score_text.get_rect()
-        text_rect.topleft = [10, 10]
+        text_rect.topleft = [10, 50]
         screen.blit(score_text, text_rect)
 
-        # show score
-        score_font = pygame.font.Font(None, 36)
-        score_text = score_font.render(str(score), True, (128, 128, 128))
-        text_rect = score_text.get_rect()
-        text_rect.topleft = [10, 10]
-        screen.blit(score_text, text_rect)
 
         # draw the player
         if not player.is_hit:
@@ -378,6 +372,7 @@ def game_fight_mode():
     running = True
     score=0
     fight_pg_value = 0
+    difficulty = 1
     player.reset()
     boss_object.reset()
     enemies1.empty()
@@ -434,15 +429,10 @@ def game_fight_mode():
         score_font = pygame.font.Font(None, 36)
         score_text = score_font.render(str(score), True, (128, 128, 128))
         text_rect = score_text.get_rect()
-        text_rect.topleft = [10, 10]
+        text_rect.topleft = [10, 50]
         screen.blit(score_text, text_rect)
 
-        # show score
-        score_font = pygame.font.Font(None, 36)
-        score_text = score_font.render(str(score), True, (128, 128, 128))
-        text_rect = score_text.get_rect()
-        text_rect.topleft = [10, 10]
-        screen.blit(score_text, text_rect)
+        
 
         # draw the player
         if not player.is_hit:
@@ -702,6 +692,7 @@ def main():
     global surface
     global difficulty
 
+    difficulty = 1
     surface = create_example_window("Airplane war", (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     theme = pygame_menu.themes.THEME_DARK.copy()
     
